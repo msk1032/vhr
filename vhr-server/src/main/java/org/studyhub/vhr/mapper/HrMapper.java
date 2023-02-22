@@ -1,11 +1,8 @@
 package org.studyhub.vhr.mapper;
 
-
-
 import org.apache.ibatis.annotations.Mapper;
 import org.studyhub.vhr.model.Hr;
 import org.studyhub.vhr.model.Role;
-
 import java.util.List;
 
 @Mapper
