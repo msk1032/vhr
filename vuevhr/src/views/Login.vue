@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <el-form
@@ -44,6 +43,8 @@
 
 
 <script>
+//import {postKeyValueRequest} from '@/utils/api'
+
 export default {
   name: "Login",
   data() {
@@ -67,7 +68,16 @@ export default {
     submitLogin() {
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
-            alert('submit!');
+            //alert('submit!');
+            this.postKeyValueRequest('/doLogin', this.loginForm)
+            .then(res => {
+              if (res){
+                //console.log(res)
+                window.sessionStorage.setItem('user', JSON.stringify(res.obj))
+                this.$router.replace('/home')
+              }
+            })
+
           } else {
             this.$message.error('用户名或密码不能为空');
             return false;
