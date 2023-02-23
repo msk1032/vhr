@@ -13,7 +13,7 @@
             <el-dropdown-item command="logout" divided>退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-      </el-header>
+      </el-header> 
       <el-container>
         <el-aside width="200px">
           <el-menu router>
@@ -47,11 +47,11 @@ export default {
   methods: {
 
 
-    menuClick(index) {
-      console.log(index)
-      //console.log(indexPath)
-      this.$router.push(index)
-    },
+    // menuClick(index) {
+    //   console.log(index)
+    //   //console.log(indexPath)
+    //   this.$router.push(index)
+    // },
     
     commandHandler(cmd) {
       if (cmd == "logout") {
