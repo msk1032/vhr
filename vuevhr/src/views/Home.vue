@@ -19,7 +19,7 @@
           <el-menu router>
             <el-submenu index="1" v-for="(item, index) in routes" v-if="!item.hidden" :key='index'>
               <template slot="title">
-                <i class="el-icon-location"></i>
+                <i :class="item.iconCls" style="margin-right: 8px;color: #000000;" size="normal"></i>
                 <span>{{item.name}}</span>
               </template>
               <el-menu-item :index="child.path" v-for='(child, indexj) in item.children' :key='indexj'>{{child.name}}</el-menu-item>
@@ -69,7 +69,7 @@ export default {
           .then(() => {
             this.getRequest("/logout");
             window.sessionStorage.removeItem("user");
-            //this.$store.commit("initRoutes", []);
+            this.$store.commit("initRoutes", []);
             this.$router.replace("/");
           })
           .catch(() => {
