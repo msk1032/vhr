@@ -1,36 +1,33 @@
-import { getRequest } from "./api";
+import {getRequest} from "./api";
 
-export const initMenu =(router, store)=> {
+export const initMenu = (router, store) => {
     if (store.state.routes.length > 0) {
-        return 
+        return;
     }
-    getRequest('/system/config/menu').then(res =>{
+    getRequest("/system/config/menu").then(res => {
         if (res) {
-            data = res.obj
-            let fmtRoutes = formatRoutes(data)
-            router.addRoutes(fmtRoutes)
-            store.commit('innitMenu', fmtRoutes)
-            // store.dispatch('connect')
+            let data = res.obj
+            let fmtRoutes = formatRoutes(data);
+            router.addRoutes(fmtRoutes);
+            store.commit('initRoutes', fmtRoutes);
+            store.dispatch('connect');
         }
-    }) 
+    })
 }
-
-export const formatRoutes=(routes)=>{
-    let fmtRoutes = []
-    routes.routes.forEach(router => {
-        let{
+export const formatRoutes = (routes) => {
+    let fmRoutes = [];
+    routes.forEach(router => {
+        let {
             path,
-            componment,
+            component,
             name,
             meta,
             iconCls,
             children
-        } = router
-
+        } = router;
         if (children && children instanceof Array) {
             children = formatRoutes(children);
         }
-
         let fmRouter = {
             path: path,
             name: name,
@@ -53,7 +50,7 @@ export const formatRoutes=(routes)=>{
                 }
             }
         }
-        fmtRoutes.push(fmRouter)
-    });
-    return fmtRoutes
+        fmRoutes.push(fmRouter);
+    })
+    return fmRoutes;
 }
