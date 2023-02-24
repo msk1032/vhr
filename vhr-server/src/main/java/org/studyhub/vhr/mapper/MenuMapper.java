@@ -1,11 +1,10 @@
 package org.studyhub.vhr.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.studyhub.vhr.model.Menu;
 
 import java.util.List;
 
-@Mapper
+
 public interface MenuMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -21,6 +20,8 @@ public interface MenuMapper {
 
     List<Menu> getMenuByHrId(Integer id);
 
+    List<Menu> getAllMenusWithRole();
+
     List<Menu> getMenus();
 
     List<String> getAllPath(Integer id);
@@ -30,4 +31,6 @@ public interface MenuMapper {
     List<Menu> bulidMenuTree();
 
     List<Integer> getMidsByRoleId(Integer rid);
+
+
 }

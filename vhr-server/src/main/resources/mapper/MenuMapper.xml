@@ -34,7 +34,7 @@
       </association>
     </collection>
   </resultMap>
-<resultMap id="MenuWithRoles" extends="BaseResultMap" type="org.studyhub.vhr.model.Menu">
+<resultMap id="MenuWithRole" extends="BaseResultMap" type="org.studyhub.vhr.model.Menu">
 <collection property="roles" ofType="org.studyhub.vhr.model.Role">
   <id property="id" column="rid"/>
   <result property="name" column="rname"/>
@@ -46,7 +46,10 @@
     <result property="name" column="name"/>
     <result property="parentId" column="parentId"/>
   </resultMap>
-  <select id="getAllMenus" resultMap="MenuWithRoles">
+  <select id="getAllMenusWithRole" resultMap="MenuWithRole">
+    select m.*,r.`id` as rid,r.`name` as rname,r.`nameZh` as rnameZh from menu m,menu_role mr,role r where m.`id`=mr.`mid` and mr.`rid`=r.`id` order by m.`id`
+  </select>
+  <select id="getAllMenus" resultMap="MenuWithRole">
     SELECT m.*,mr.`id` AS rid,r.`name` AS rname , r.`nameZh` AS rnameZh FROM menu m LEFT JOIN menu_role mr ON m.id = mr.mid LEFT JOIN ROLE r ON mr.rid = r.id  WHERE r.`name` IS NOT NULL ORDER BY m.`id`
   </select>
   <select id="bulidMenuTree" resultMap="MenuTree">

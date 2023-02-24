@@ -21,4 +21,14 @@ public class HelloController {
     public RespBean doLogin() {
         return RespBean.error("please login");
     }
+
+    @GetMapping("/employee/basic/hello")
+    public String hello1() {
+        return "hello1";
+    }
+    @GetMapping("/employee/advanced/hello")
+    public  String hello2() {
+
+        return "hello2";
+    }
 }
