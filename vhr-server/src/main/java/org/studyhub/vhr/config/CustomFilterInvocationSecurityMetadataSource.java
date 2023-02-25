@@ -20,7 +20,7 @@ import java.util.List;
  * 根据url分析接口所需要的用户角色
  */
 @Configuration
-public class CustomFilter implements FilterInvocationSecurityMetadataSource {
+public class CustomFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     
     @Autowired
     MenuService menuService;

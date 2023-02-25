@@ -1,4 +1,4 @@
-package org.studyhub.vhr.controller;
+package org.studyhub.vhr.controller.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

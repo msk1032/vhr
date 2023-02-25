@@ -26,10 +26,10 @@ import java.io.PrintWriter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    CustomerDecisionManager customerDecisionManager;
+    CustomAccessDecisionManager customAccessDecisionManager;
 
     @Autowired
-    CustomFilter customFilter;
+    CustomFilterInvocationSecurityMetadataSource customFilterInvocationSecurityMetadataSource;
 
 
     @Autowired
@@ -57,8 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setAccessDecisionManager(customerDecisionManager);
-                        o.setSecurityMetadataSource(customFilter);
+                        o.setAccessDecisionManager(customAccessDecisionManager);
+                        o.setSecurityMetadataSource(customFilterInvocationSecurityMetadataSource);
                         return o;
                     }
                 })

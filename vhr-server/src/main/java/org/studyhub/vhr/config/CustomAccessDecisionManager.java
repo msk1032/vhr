@@ -16,7 +16,7 @@ import java.util.Collection;
  * @create 2023-02-24 10:25
  */
 @Component
-public class CustomerDecisionManager implements AccessDecisionManager {
+public class CustomAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> collection) throws AccessDeniedException, InsufficientAuthenticationException {
         for (ConfigAttribute configAttribute : collection) {

@@ -16,7 +16,7 @@
       </el-header>
       <el-container>
         <el-aside width="200px">
-          <el-menu router>
+          <el-menu router unique-opened>
             <el-submenu
               index="1"
               v-for="(item, index) in routes"
@@ -26,7 +26,7 @@
               <template slot="title">
                 <i
                   :class="item.iconCls"
-                  style="margin-right: 8px; color: #000000"
+                  style="margin-right: 8px; color: #409eff"
                   size="normal"
                 ></i>
                 <span>{{ item.name }}</span>

@@ -4,7 +4,6 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import store from './store/index'
-
 import { postKeyValueRequest } from './utils/api'
 import { postRequest } from './utils/api'
 import { putRequest } from './utils/api'
