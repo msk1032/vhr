@@ -51,7 +51,7 @@ public class PositionController {
 
     }
 
-    @DeleteMapping("/")
+    @PostMapping("/many")
     public RespBean deletePositionsByIds(@RequestBody Integer[] ids) {
 
         if(positionService.deletePositionsByIds(ids)==ids.length){

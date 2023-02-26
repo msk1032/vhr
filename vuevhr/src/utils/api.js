@@ -7,9 +7,9 @@ axios.interceptors.response.use(success =>{
         Message.error({message: success.data.msg})
         return 
     }
-    // if(success.data.msg) {
-    //     Message.success({message: success.data.msg})
-    // }
+    if(success.data.msg) {
+        console.log(success.data.msg)
+    }
 
     return success.data
 },error=>{
