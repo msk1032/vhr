@@ -45,13 +45,13 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="showEditView(scope.$index, scope.row)"
+              @click="showEditView(scope.row)"
               >编辑
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
               >删除
             </el-button>
           </template>
@@ -157,16 +157,13 @@ export default {
       });
     },
 
-    showEditView(index, row) {
-      console.log(index);
-      console.log(row);
+    showEditView(row) {
       this.dialogVisible = true;
       this.updatePos = row;
     },
 
-    handleDelete(index, row) {
-      console.log(row.id);
-
+    handleDelete(row) {
+      //console.log(row.id);
       this.$confirm("此操作将永久删除职位" + row.name + ", 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
