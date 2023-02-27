@@ -22,6 +22,7 @@
       <el-collapse
         v-model="activeName"
         accordion
+        @change="change"
       >
         <el-collapse-item
           :title="r.nameZh"
@@ -51,7 +52,7 @@
               ></el-tree>
               <div style="display: flex; justify-content: flex-end">
                 <el-button @click="cancelUpdate">取消修改</el-button>
-                <el-button type="primary">确认修改</el-button
+                <el-button type="primary" @click="doUpdate(r.id,index)">确认修改</el-button
                 >
               </div>
             </div>
@@ -72,6 +73,12 @@ export default {
         nameZh: "",
       },
       roles:[],
+      allmenus:[],
+      selectedMenus:[],
+      defaultProps:{
+        children:'children',
+        label:'name'
+      }
     };
   },
   mounted() {
@@ -99,7 +106,58 @@ export default {
           this.roles = res.obj
         }
       }) 
-    }
+    },
+
+    change(rid) {
+      //alert(rid)
+      if(rid){
+        this.initAllMenus()
+        console.log(rid)
+        this.initSelectMenus(rid)
+      }
+    },
+
+    initAllMenus() {
+      this.getRequest("/system/basic/permiss/menus").then(res=>{
+        if(res){
+          this.allmenus = res.obj;
+        }
+      })
+    },
+
+    initSelectMenus(rid) {
+      this.getRequest("/system/basic/permiss/menus/"+rid).then(res=>{
+        if(res){
+          this.selectedMenus = res.obj;
+        }
+      })
+    },
+    cancelUpdate() {
+
+    },
+
+    doUpdate(id,index){
+      this.$refs.tree
+      let tree = this.$refs.tree[index]
+      let selectedKeys = tree.getCheckedKeys(true)
+      this.putRequest("/system/basic/permiss/update/"+id, selectedKeys).then(res=>{
+        if(res) {
+          this.activeName = '';
+        }
+      })
+
+    },
+
+
+
+
+
+
+
+
+
+
+
   },
 };
 </script>

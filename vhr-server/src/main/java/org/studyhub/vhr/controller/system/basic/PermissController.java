@@ -28,6 +28,26 @@ public class PermissController {
         return RespBean.ok("", roles);
     }
 
+    @GetMapping("menus")
+    public RespBean getAllMenus() {
+
+        return RespBean.ok("", menuService.getAllMenus());
+    }
+
+
+    @GetMapping("menus/{rid}")
+    public RespBean getMidsbyRId(@PathVariable("rid") Integer rid) {
+        return RespBean.ok("", menuService.getMidsbyRId(rid));
+    }
+
+    @PutMapping("update/{id}")
+    public RespBean updateMenuRole(@PathVariable("id") Integer id ,@RequestBody List<Integer> list){
+        if(menuService.updateMenuRole(id, list)) {
+            return RespBean.ok("update success");
+        }
+        return RespBean.error("update fail");
+    }
+
     @PostMapping("/")
     public RespBean addRole(@RequestBody Role role) {
         if(1 == roleService.addRole(role)) {

@@ -3,6 +3,7 @@ package org.studyhub.vhr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.studyhub.vhr.mapper.HrMapper;
 import org.studyhub.vhr.mapper.MenuMapper;
 import org.studyhub.vhr.mapper.RoleMapper;
@@ -21,11 +22,27 @@ class VhrServerApplicationTests {
     HrMapper hrMapper;
     @Autowired
     MenuService menuService;
+
     @Autowired
     HrService hrService;
 
     @Autowired
     RoleService roleService;
+
+    @Test
+    void getMidsByRIde() {
+        List<Integer> list = menuService.getMidsbyRId(1);
+
+        System.out.println(list);
+    }
+
+    @Test
+    void testMenuChildren() {
+        List<Menu> menus = menuService.getAllMenus();
+        for (Menu menu : menus) {
+            System.out.println(menu);
+        }
+    }
 
     @Test
     void testRole() {
