@@ -3,7 +3,6 @@ package org.studyhub.vhr.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +14,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.studyhub.vhr.model.Hr;
 import org.studyhub.vhr.model.RespBean;
 import org.studyhub.vhr.service.HrService;
-import org.studyhub.vhr.utils.WriteHandler;
+import org.studyhub.vhr.utilss.WriteHandler;
 
 /**
  * @author haoren
@@ -37,12 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 
     @Override
@@ -70,11 +63,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .loginProcessingUrl("/doLogin")
+                .successHandler((req, res, authentication)-> {
+                    Hr hr = (Hr) authentication.getPrincipal();
+                    hr.setPassword(null);
+                    RespBean ok = RespBean.ok("login success", hr);
+                    WriteHandler.write(ok,res);
+                })
+                .failureHandler((req, res, exception)-> {
+                    RespBean error = RespBean.error(exception.getMessage());
+                    WriteHandler.write(error,res);
+                })
                 .permitAll()
                 .and()
                 .logout()
                 .logoutSuccessHandler((req, res, authentication) -> {
-
                     RespBean ok = RespBean.ok("logout success");
                     WriteHandler.write(ok,res);
 
@@ -87,28 +90,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint((req, resp, exception) -> {
                     RespBean ok = RespBean.error(exception.getMessage());
                     WriteHandler.write(ok,resp);
-
                 });
-        http.addFilterAt(usernameAndPasswordAuthenticationFilter(),UsernameAndPasswordAuthenticationFilter.class);
-    }
-
-    @Bean
-    UsernameAndPasswordAuthenticationFilter usernameAndPasswordAuthenticationFilter() throws Exception {
-        UsernameAndPasswordAuthenticationFilter filter = new UsernameAndPasswordAuthenticationFilter();
-        filter.setUsernameParameter("username");
-        filter.setPasswordParameter("password");
-        filter.setAuthenticationManager(authenticationManagerBean());
-        filter.setFilterProcessesUrl("/doLogin");
-        filter.setAuthenticationSuccessHandler((req, res, authentication)-> {
-        Hr hr = (Hr) authentication.getPrincipal();
-        hr.setPassword(null);
-        RespBean ok = RespBean.ok("login success", hr);
-        WriteHandler.write(ok,res);
-        });
-        filter.setAuthenticationFailureHandler((req, res, exception)-> {
-            RespBean error = RespBean.error("出错了");
-            WriteHandler.write(error,res);
-        });
-        return filter;
     }
 }
