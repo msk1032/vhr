@@ -26,6 +26,15 @@
           @keydown.enter.native="submitLogin"
         ></el-input>
       </el-form-item>
+
+      <el-form-item prop="code">
+        <el-input
+            size="normal"
+            auto-complete="off"
+        ></el-input>
+     <img :src="loginForm.code" @click="getCodeImage"/>
+      </el-form-item>
+
       <el-checkbox
         size="normal"
         class="loginRemember"
@@ -53,6 +62,7 @@ export default {
       loginForm: {
         username: "admin",
         password: "123",
+        code:''
       },
       checked: true,
       rules: {
@@ -63,8 +73,16 @@ export default {
       },
     };
   },
-
+  mounted() {
+    this.getCodeImage()
+  },
   methods: {
+
+    getCodeImage(){
+      this.getRequest("/system/config/kapchaImage?"+new Date().getMilliseconds()).then(data=>{
+        this.loginForm.code = "data:image/jpeg;base64,"+data.obj
+      })
+    },
 
     submitLogin() {
         this.$refs.loginForm.validate((valid) => {

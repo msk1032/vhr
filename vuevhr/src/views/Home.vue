@@ -18,7 +18,7 @@
         <el-aside width="200px">
           <el-menu router unique-opened>
             <el-submenu
-              index="1"
+              :index="index+''"
               v-for="(item, index) in routes"
               v-if="!item.hidden"
               :key="index"

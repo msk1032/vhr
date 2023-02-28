@@ -1,9 +1,9 @@
 package org.studyhub.vhr.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,8 +15,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.studyhub.vhr.model.Hr;
 import org.studyhub.vhr.model.RespBean;
 import org.studyhub.vhr.service.HrService;
-
-import java.io.PrintWriter;
+import org.studyhub.vhr.utils.WriteHandler;
 
 /**
  * @author haoren
@@ -38,6 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
@@ -65,35 +70,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/doLogin")
-                .successHandler((req, res, authentication)-> {
-                    res.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = res.getWriter();
-                    Hr hr = (Hr) authentication.getPrincipal();
-                    hr.setPassword(null);
-                    RespBean ok = RespBean.ok("login success", hr);
-                    writer.write(new ObjectMapper().writeValueAsString(ok));
-                    writer.flush();
-                    writer.close();
-                })
-                .failureHandler((req, res, exception)-> {
-                    res.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = res.getWriter();
-                    RespBean error = RespBean.error(exception.getMessage());
-                    writer.write(new ObjectMapper().writeValueAsString(error));
-                    writer.flush();
-                    writer.close();
-                })
                 .permitAll()
                 .and()
                 .logout()
                 .logoutSuccessHandler((req, res, authentication) -> {
-                    res.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = res.getWriter();
+
                     RespBean ok = RespBean.ok("logout success");
-                    writer.write(new ObjectMapper().writeValueAsString(ok));
-                    writer.flush();
-                    writer.close();
+                    WriteHandler.write(ok,res);
+
                 })
                 .permitAll()
                 .and()
@@ -101,12 +85,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint((req, resp, exception) -> {
-                    resp.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = resp.getWriter();
                     RespBean ok = RespBean.error(exception.getMessage());
-                    writer.write(new ObjectMapper().writeValueAsString(ok));
-                    writer.flush();
-                    writer.close();
+                    WriteHandler.write(ok,resp);
+
                 });
+        http.addFilterAt(usernameAndPasswordAuthenticationFilter(),UsernameAndPasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    UsernameAndPasswordAuthenticationFilter usernameAndPasswordAuthenticationFilter() throws Exception {
+        UsernameAndPasswordAuthenticationFilter filter = new UsernameAndPasswordAuthenticationFilter();
+        filter.setUsernameParameter("username");
+        filter.setPasswordParameter("password");
+        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setFilterProcessesUrl("/doLogin");
+        filter.setAuthenticationSuccessHandler((req, res, authentication)-> {
+        Hr hr = (Hr) authentication.getPrincipal();
+        hr.setPassword(null);
+        RespBean ok = RespBean.ok("login success", hr);
+        WriteHandler.write(ok,res);
+        });
+        filter.setAuthenticationFailureHandler((req, res, exception)-> {
+            RespBean error = RespBean.error("出错了");
+            WriteHandler.write(error,res);
+        });
+        return filter;
     }
 }
