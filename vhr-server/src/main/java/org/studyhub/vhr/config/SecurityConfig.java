@@ -1,6 +1,5 @@
 package org.studyhub.vhr.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +14,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.studyhub.vhr.model.Hr;
 import org.studyhub.vhr.model.RespBean;
 import org.studyhub.vhr.service.HrService;
-
-import java.io.PrintWriter;
+import org.studyhub.vhr.utilss.WriteHandler;
 
 /**
  * @author haoren
@@ -67,33 +65,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .loginProcessingUrl("/doLogin")
                 .successHandler((req, res, authentication)-> {
-                    res.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = res.getWriter();
                     Hr hr = (Hr) authentication.getPrincipal();
                     hr.setPassword(null);
                     RespBean ok = RespBean.ok("login success", hr);
-                    writer.write(new ObjectMapper().writeValueAsString(ok));
-                    writer.flush();
-                    writer.close();
+                    WriteHandler.write(ok,res);
                 })
                 .failureHandler((req, res, exception)-> {
-                    res.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = res.getWriter();
                     RespBean error = RespBean.error(exception.getMessage());
-                    writer.write(new ObjectMapper().writeValueAsString(error));
-                    writer.flush();
-                    writer.close();
+                    WriteHandler.write(error,res);
                 })
                 .permitAll()
                 .and()
                 .logout()
                 .logoutSuccessHandler((req, res, authentication) -> {
-                    res.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = res.getWriter();
                     RespBean ok = RespBean.ok("logout success");
-                    writer.write(new ObjectMapper().writeValueAsString(ok));
-                    writer.flush();
-                    writer.close();
+                    WriteHandler.write(ok,res);
+
                 })
                 .permitAll()
                 .and()
@@ -101,12 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint((req, resp, exception) -> {
-                    resp.setContentType("application/json;charset=UTF-8");
-                    PrintWriter writer = resp.getWriter();
                     RespBean ok = RespBean.error(exception.getMessage());
-                    writer.write(new ObjectMapper().writeValueAsString(ok));
-                    writer.flush();
-                    writer.close();
+                    WriteHandler.write(ok,resp);
                 });
     }
 }
