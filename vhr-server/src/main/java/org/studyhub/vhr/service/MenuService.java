@@ -1,9 +1,9 @@
 package org.studyhub.vhr.service;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.studyhub.vhr.mapper.MenuMapper;
 import org.studyhub.vhr.mapper.MenuRoleMapper;
 import org.studyhub.vhr.model.Hr;
@@ -43,6 +43,7 @@ public class MenuService {
         return menuMapper.getMidsByRoleId(rid);
     }
 
+    @Transactional
     public Boolean updateMenuRole(Integer id, List<Integer> list) {
         menuRoleMapper.deleteByRid(id);
         Integer res = menuRoleMapper.insertRecord(id, list);

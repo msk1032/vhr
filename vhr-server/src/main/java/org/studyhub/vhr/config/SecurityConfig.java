@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -102,8 +103,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint((req, resp, exception) -> {
                     resp.setContentType("application/json;charset=UTF-8");
+                    resp.setStatus(401);
                     PrintWriter writer = resp.getWriter();
                     RespBean ok = RespBean.error(exception.getMessage());
+                    if(exception instanceof InsufficientAuthenticationException) {
+                        ok.setMsg("please login");
+                    }
                     writer.write(new ObjectMapper().writeValueAsString(ok));
                     writer.flush();
                     writer.close();
