@@ -88,7 +88,7 @@ export default {
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
             //alert('submit!');
-            this.postKeyValueRequest('/doLogin', this.loginForm)
+            this.postRequest('/doLogin', this.loginForm)
             .then(res => {
               if (res){
                 //console.log(res)
