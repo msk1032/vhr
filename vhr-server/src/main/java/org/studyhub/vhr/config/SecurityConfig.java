@@ -15,7 +15,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.studyhub.vhr.model.Hr;
 import org.studyhub.vhr.model.RespBean;
 import org.studyhub.vhr.service.HrService;
-import org.studyhub.vhr.utilss.WriteHandler;
+import org.studyhub.vhr.utils.WriteHandler;
 
 /**
  * @author haoren
