@@ -3,6 +3,7 @@ package org.studyhub.vhr.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -63,17 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/doLogin")
-                .successHandler((req, res, authentication)-> {
-                    Hr hr = (Hr) authentication.getPrincipal();
-                    hr.setPassword(null);
-                    RespBean ok = RespBean.ok("login success", hr);
-                    WriteHandler.write(ok,res);
-                })
-                .failureHandler((req, res, exception)-> {
-                    RespBean error = RespBean.error(exception.getMessage());
-                    WriteHandler.write(error,res);
-                })
+
                 .permitAll()
                 .and()
                 .logout()
@@ -91,5 +82,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     RespBean ok = RespBean.error(exception.getMessage());
                     WriteHandler.write(ok,resp);
                 });
+
+        http.addFilterAt(usernameAndPasswordAuthenticationFilter(), UsernameAndPasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    UsernameAndPasswordAuthenticationFilter usernameAndPasswordAuthenticationFilter() throws Exception {
+        UsernameAndPasswordAuthenticationFilter filter = new UsernameAndPasswordAuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setFilterProcessesUrl("/doLogin");
+        filter.setAuthenticationSuccessHandler((req, res, authentication)-> {
+            Hr hr = (Hr) authentication.getPrincipal();
+            hr.setPassword(null);
+            RespBean ok = RespBean.ok("login success", hr);
+            WriteHandler.write(ok,res);
+        });
+        filter.setAuthenticationFailureHandler((req, res, exception)-> {
+            RespBean error = RespBean.error(exception.getMessage());
+            WriteHandler.write(error,res);
+        });
+        return filter;
     }
 }
