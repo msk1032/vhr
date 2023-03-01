@@ -21,4 +21,13 @@ public class DepartmentService {
 
         return departmentMapper.getAllDepartments(-1);
     }
+
+    public Integer addDepartment(Department department) {
+        department.setEnabled(true);
+        return departmentMapper.insertSelective(department);
+    }
+
+    public Integer deleteDepartment(Integer id) {
+        return departmentMapper.deleteByPrimaryKey(id);
+    }
 }
