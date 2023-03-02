@@ -1,5 +1,6 @@
 package org.studyhub.vhr.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Department {
@@ -14,7 +15,17 @@ public class Department {
     private Boolean enabled;
 
     private Boolean isParent;
-    private List<Department> children;
+    private List<Department> children = new ArrayList<>();
+
+    private Integer result;
+
+    public Integer getResult() {
+        return result;
+    }
+
+    public void setResult(Integer result) {
+        this.result = result;
+    }
 
     public List<Department> getChildren() {
         return children;

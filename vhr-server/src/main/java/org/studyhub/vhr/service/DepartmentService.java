@@ -1,5 +1,6 @@
 package org.studyhub.vhr.service;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.studyhub.vhr.mapper.DepartmentMapper;
@@ -24,10 +25,11 @@ public class DepartmentService {
 
     public Integer addDepartment(Department department) {
         department.setEnabled(true);
-        return departmentMapper.insertSelective(department);
+        departmentMapper.addDepartment(department);
+        return department.getResult();
     }
 
-    public Integer deleteDepartment(Integer id) {
-        return departmentMapper.deleteByPrimaryKey(id);
+    public Integer deleteDepartmentByIds( Integer[] list) {
+        return departmentMapper.deleteDepartmentByIds(list);
     }
 }

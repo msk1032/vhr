@@ -452,7 +452,7 @@ insert  into `sysmsg`(`id`,`mid`,`type`,`hrid`,`state`) values (57,14,0,3,1),(58
 
 DELIMITER $$
 
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `addDep`(in depName varchar(32),in parentId int,in enabled boolean,out result int,out result2 int)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addDep`(in depName varchar(32),in parentId int,in enabled boolean,out result int,out result2 int)
 begin
   declare did int;
   declare pDepPath varchar(64);
@@ -463,7 +463,7 @@ begin
   select depPath into pDepPath from department where id=parentId;
   update department set depPath=concat(pDepPath,'.',did) where id=did;
   update department set isParent=true where id=parentId;
-end */$$
+end $$
 DELIMITER ;
 
 /* Procedure structure for procedure `deleteDep` */
