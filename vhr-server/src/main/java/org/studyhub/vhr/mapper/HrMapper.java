@@ -22,4 +22,5 @@ public interface HrMapper {
 
     List<Role> getHrRolesById(Integer id);
 
+    List<Hr> getAllHrs(Integer id);
 }

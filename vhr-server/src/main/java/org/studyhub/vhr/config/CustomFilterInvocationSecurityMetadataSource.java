@@ -52,6 +52,6 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return false;
+        return true;
     }
 }

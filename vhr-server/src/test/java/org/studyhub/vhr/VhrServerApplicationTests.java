@@ -30,6 +30,12 @@ class VhrServerApplicationTests {
     RoleService roleService;
 
     @Test
+    void getAllHrs() {
+        List<Hr> hrs = hrMapper.getAllHrs(3);
+        System.out.println(hrs);
+    }
+
+    @Test
     void getMidsByRIde() {
         List<Integer> list = menuService.getMidsbyRId(1);
 
